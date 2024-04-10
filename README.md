@@ -1,7 +1,7 @@
 > :warning: **Note**: This software is currently under active development. The API and interface should be considered unstable until a v1.0.0 release.
 
 <p align="center">
-  <img alt="Tapioca logo" width="200" src="misc/tapioca-logo.svg" />
+  <img alt="Tapioca logo" width="200" src="misc/tapioca-logo.svggg" />
 </p>
 
 # Tapioca - The swiss army knife of RBI generation
