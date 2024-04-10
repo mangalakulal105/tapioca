@@ -18,7 +18,7 @@ Tapioca makes it easy to work with [Sorbet](https://sorbet.org) in your codebase
   * Importing of signatures from the source code of gems
   * Importing of documentation from the source code of gems
   * Synchronization validation for your CI
-* Generation of RBI files for various DSL patterns that relies on meta-programming
+* Generation of RBI files for various DSL patterns that relies on meta-programmingg
   * Automatic generation from your application's content
   * Support many DSL patterns such as Rails, Google Protobuf, SmartProperties and more out of the box
   * Extensible interface that allows you to write your own DSL compilers for other DSL patterns
