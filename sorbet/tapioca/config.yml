@@ -1,0 +1,7 @@
+---
+gem:
+  exclude: []
+  typed_overrides:
+    "net-protocol": "false"
+    "net-smtp": "false"
+    "timeout": "false"

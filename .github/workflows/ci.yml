@@ -1,0 +1,81 @@
+name: CI
+
+on: [push, pull_request]
+
+env:
+  SRB_SKIP_GEM_RBIS: true
+
+jobs:
+  linters:
+    runs-on: ubuntu-latest
+    name: Linters
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          rubygems: 'latest'
+          bundler: 'latest'
+      - name: Run type check
+        run: bin/typecheck
+      - name: Lint Ruby files
+        run: bin/style
+      - name: Verify documentation
+        run: bin/docs
+      - name: Verify README
+        run: bin/readme
+      - name: Verify gem RBIs are up-to-date
+        run: bundle exec exe/tapioca gem --verify
+      - name: Verify duplicates in shims
+        run: bundle exec exe/tapioca check-shims
+
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.0", "3.1", "3.2", "3.3", "head"]
+        rails: ["7.0", "current", "main"]
+        include:
+          - rails: "main"
+            experimental: true
+          - ruby: "head"
+            experimental: true
+        exclude:
+          - ruby: "3.0"
+            rails: "main"
+    name: Ruby ${{ matrix.ruby }} - Rails ${{ matrix.rails }}
+    env:
+      RAILS_VERSION: ${{ matrix.rails }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install protobuf
+        run: |
+          curl -OL https://github.com/google/protobuf/releases/download/v25.3/protoc-25.3-linux-x86_64.zip
+          unzip protoc-25.3-linux-x86_64.zip -d $HOME/.local
+          export PATH="$PATH:$HOME/.local/bin"
+      - name: Remove Gemfile.lock
+        # Remove Gemfile.lock for Ruby head builds and non-Rails current builds
+        if: ${{ matrix.ruby == 'head' || matrix.rails != 'current' }}
+        run: "rm -f Gemfile.lock"
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+          rubygems: 'latest'
+          bundler: 'latest'
+      - name: Run tests
+        run: bin/test
+        continue-on-error: ${{ !!matrix.experimental }}
+
+  buildall:
+    if: ${{ always() && github.event.pull_request }}
+    runs-on: ubuntu-latest
+    name: Build (matrix)
+    needs: [linters, tests]
+    steps:
+      - name: Check build matrix status
+        if: ${{ needs.tests.result != 'success' || needs.linters.result != 'success' }}
+        run: exit 1

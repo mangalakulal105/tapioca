@@ -1,0 +1,20 @@
+name: tapioca
+
+type: ruby
+
+up:
+  - ruby
+  - bundler
+
+env:
+  SRB_SKIP_GEM_RBIS: 'true'
+
+commands:
+  typecheck:
+    aliases: [ "tc" ]
+    run:     "bin/typecheck"
+  console:   "bin/console"
+  test:      "bin/test"
+  style:     "bin/style"
+  docs:      "bin/docs"
+  sanity:    "bin/typecheck && bin/style && bin/test"

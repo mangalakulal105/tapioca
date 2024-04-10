@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+SRB_SKIP_GEM_RBIS=true bundle exec srb tc "$@"

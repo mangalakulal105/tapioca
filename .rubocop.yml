@@ -1,0 +1,51 @@
+# This file strictly follows the rules defined in the Ruby style guide:
+#   http://shopify.github.io/ruby-style-guide/
+inherit_gem:
+  rubocop-shopify: rubocop.yml
+
+require:
+ - rubocop-sorbet
+ - rubocop-rspec
+
+AllCops:
+  NewCops: disable
+  SuggestExtensions: false
+  Exclude:
+  - "vendor/**/*"
+  Include:
+  - "sorbet/rbi/shims/**/*.rbi"
+
+Naming/InclusiveLanguage:
+  Exclude:
+  - "lib/tapioca/dsl/compilers/protobuf.rb"
+
+RSpec/BeforeAfterAll:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+Sorbet:
+  Enabled: true
+
+Sorbet/ConstantsFromStrings:
+  Enabled: false
+
+Sorbet/FalseSigil:
+  Enabled: false
+
+Sorbet/TrueSigil:
+  Enabled: true
+  Include:
+    - "**/*.rb"
+    - "**/*.rake"
+
+Style/CaseEquality:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Exclude:
+  - "spec/tapioca/**/*"
